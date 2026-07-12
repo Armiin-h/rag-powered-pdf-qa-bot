@@ -1,6 +1,8 @@
-# PDF Document Q&A Bot (RAG)
+# RAG-powered PDF Q&A bot
 
 A retrieval-augmented generation (RAG) application that lets you upload large PDF documents and ask questions answered strictly from the document's content.
+
+**Repository:** [github.com/Armiin-h/rag-powered-pdf-qa-bot](https://github.com/Armiin-h/rag-powered-pdf-qa-bot)
 
 ## Features
 
@@ -39,20 +41,45 @@ ollama pull llama3.2
 python -m venv .venv
 .venv\Scripts\activate        # Windows
 pip install -r requirements.txt
-cp .env.example .env            # adjust settings if needed
+copy .env.example .env        # adjust settings if needed
 ```
 
 ## Usage
+
+### Test PDF ingestion (Day 1)
+
+```bash
+python scripts/ingest_pdf.py path\to\your\document.pdf
+```
+
+This loads the PDF, splits it into chunks, and prints ingestion stats plus a short preview.
+
+### Full app (coming soon)
 
 ```bash
 streamlit run app.py
 ```
 
-Upload a PDF, wait for indexing to complete, then ask questions about the document.
+## Project Structure
+
+```
+src/
+  config.py              # Environment-based settings
+  ingestion/
+    pdf_loader.py        # PyPDF text extraction
+    text_splitter.py     # Recursive character splitting
+scripts/
+  ingest_pdf.py          # CLI to preview ingestion
+```
 
 ## Project Status
 
-🚧 **In development** — initial scaffolding. See commit history for progress.
+| Day | Milestone | Status |
+|-----|-----------|--------|
+| 1 | PDF loader + text splitter | Done |
+| 2 | Embeddings + ChromaDB | Planned |
+| 3 | Retrieval chain + prompt | Planned |
+| 4 | Streamlit UI | Planned |
 
 ## License
 
