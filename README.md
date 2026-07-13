@@ -54,6 +54,32 @@ python scripts/ingest_pdf.py path\to\your\document.pdf
 
 This loads the PDF, splits it into chunks, and prints ingestion stats plus a short preview.
 
+### Index and search (Day 2)
+
+Index a PDF into the local ChromaDB store (requires Ollama with `nomic-embed-text`):
+
+```bash
+python scripts/ingest_pdf.py path\to\your\document.pdf --index
+```
+
+Search indexed chunks:
+
+```bash
+python scripts/ingest_pdf.py --query "What is self-attention?"
+```
+
+Index and search in one run:
+
+```bash
+python scripts/ingest_pdf.py path\to\your\document.pdf --index --query "How many layers?"
+```
+
+Run unit tests (no Ollama required):
+
+```bash
+pytest
+```
+
 ### Full app (coming soon)
 
 ```bash
@@ -65,11 +91,20 @@ streamlit run app.py
 ```
 src/
   config.py              # Environment-based settings
+  embeddings/
+    ollama_embeddings.py # Ollama embedding model factory
   ingestion/
     pdf_loader.py        # PyPDF text extraction
     text_splitter.py     # Recursive character splitting
+  indexing/
+    pipeline.py          # PDF -> chunks -> ChromaDB pipeline
+  vectorstore/
+    chroma_store.py      # ChromaDB persistence and search
 scripts/
-  ingest_pdf.py          # CLI to preview ingestion
+  ingest_pdf.py          # CLI for ingestion, indexing, and search
+tests/
+  test_chroma_store.py
+  test_indexing_pipeline.py
 ```
 
 ## Project Status
@@ -77,7 +112,7 @@ scripts/
 | Day | Milestone | Status |
 |-----|-----------|--------|
 | 1 | PDF loader + text splitter | Done |
-| 2 | Embeddings + ChromaDB | Planned |
+| 2 | Embeddings + ChromaDB | Done |
 | 3 | Retrieval chain + prompt | Planned |
 | 4 | Streamlit UI | Planned |
 
