@@ -74,6 +74,20 @@ Index and search in one run:
 python scripts/ingest_pdf.py path\to\your\document.pdf --index --query "How many layers?"
 ```
 
+### Ask questions (Day 3)
+
+After indexing, ask grounded questions via the RAG chain (requires Ollama with `llama3.2`):
+
+```bash
+python scripts/ask_pdf.py "What is self-attention?"
+```
+
+Show retrieved source chunks:
+
+```bash
+python scripts/ask_pdf.py "How many encoder layers?" --show-sources
+```
+
 Run unit tests (no Ollama required):
 
 ```bash
@@ -98,13 +112,21 @@ src/
     text_splitter.py     # Recursive character splitting
   indexing/
     pipeline.py          # PDF -> chunks -> ChromaDB pipeline
+  llm/
+    ollama_llm.py        # Ollama chat model factory
+  rag/
+    prompts.py           # Grounded QA prompt + context formatting
+    chain.py             # Retriever + LCEL RAG chain
   vectorstore/
     chroma_store.py      # ChromaDB persistence and search
 scripts/
   ingest_pdf.py          # CLI for ingestion, indexing, and search
+  ask_pdf.py             # CLI for document Q&A
 tests/
   test_chroma_store.py
   test_indexing_pipeline.py
+  test_prompts.py
+  test_rag_chain.py
 ```
 
 ## Project Status
@@ -113,7 +135,7 @@ tests/
 |-----|-----------|--------|
 | 1 | PDF loader + text splitter | Done |
 | 2 | Embeddings + ChromaDB | Done |
-| 3 | Retrieval chain + prompt | Planned |
+| 3 | Retrieval chain + prompt | Done |
 | 4 | Streamlit UI | Planned |
 
 ## License
