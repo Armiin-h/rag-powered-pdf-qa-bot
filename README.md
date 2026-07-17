@@ -88,21 +88,26 @@ Show retrieved source chunks:
 python scripts/ask_pdf.py "How many encoder layers?" --show-sources
 ```
 
+### Streamlit app (Day 4)
+
+```bash
+streamlit run app.py
+```
+
+Upload a PDF in the sidebar, click **Index document**, then ask questions in the chat. Retrieved source chunks appear in an expander under each answer.
+
 Run unit tests (no Ollama required):
 
 ```bash
 pytest
 ```
 
-### Full app (coming soon)
-
-```bash
-streamlit run app.py
-```
-
 ## Project Structure
 
 ```
+app.py                   # Streamlit chat UI
+.streamlit/
+  config.toml            # Theme and server defaults
 src/
   config.py              # Environment-based settings
   embeddings/
@@ -117,6 +122,8 @@ src/
   rag/
     prompts.py           # Grounded QA prompt + context formatting
     chain.py             # Retriever + LCEL RAG chain
+  ui/
+    helpers.py           # Session keys, upload save, source labels
   vectorstore/
     chroma_store.py      # ChromaDB persistence and search
 scripts/
@@ -127,6 +134,7 @@ tests/
   test_indexing_pipeline.py
   test_prompts.py
   test_rag_chain.py
+  test_ui_helpers.py
 ```
 
 ## Project Status
@@ -136,7 +144,7 @@ tests/
 | 1 | PDF loader + text splitter | Done |
 | 2 | Embeddings + ChromaDB | Done |
 | 3 | Retrieval chain + prompt | Done |
-| 4 | Streamlit UI | Planned |
+| 4 | Streamlit UI | Done |
 
 ## License
 
