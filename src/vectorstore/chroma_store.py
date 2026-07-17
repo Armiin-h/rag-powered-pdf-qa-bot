@@ -56,3 +56,22 @@ def search_similar(
         collection_name=collection_name,
     )
     return store.similarity_search(query, k=k or settings.top_k)
+
+
+def clear_vectorstore(
+    embeddings: Embeddings,
+    *,
+    persist_dir: Path | None = None,
+    collection_name: str | None = None,
+) -> int:
+    """Remove all documents from the Chroma collection. Returns deleted count."""
+    store = get_vectorstore(
+        embeddings,
+        persist_dir=persist_dir,
+        collection_name=collection_name,
+    )
+    stored = store.get()
+    ids = stored.get("ids") or []
+    if ids:
+        store.delete(ids=ids)
+    return len(ids)

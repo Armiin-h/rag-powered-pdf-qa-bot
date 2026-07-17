@@ -4,7 +4,7 @@ import pytest
 from langchain_community.embeddings import FakeEmbeddings
 from langchain_core.documents import Document
 
-from src.vectorstore.chroma_store import add_documents, get_vectorstore, search_similar
+from src.vectorstore.chroma_store import add_documents, clear_vectorstore, get_vectorstore, search_similar
 
 
 @pytest.fixture
@@ -51,3 +51,17 @@ def test_search_similar_returns_relevant_chunk(fake_embeddings, chroma_dir):
 def test_add_documents_rejects_empty_list(fake_embeddings, chroma_dir):
     with pytest.raises(ValueError, match="No documents to index"):
         add_documents([], fake_embeddings, persist_dir=chroma_dir)
+
+
+def test_clear_vectorstore_removes_documents(fake_embeddings, chroma_dir):
+    docs = [
+        Document(page_content="Chunk one.", metadata={"page": 1}),
+        Document(page_content="Chunk two.", metadata={"page": 2}),
+    ]
+    add_documents(docs, fake_embeddings, persist_dir=chroma_dir)
+
+    removed = clear_vectorstore(fake_embeddings, persist_dir=chroma_dir)
+
+    assert removed == 2
+    reopened = get_vectorstore(fake_embeddings, persist_dir=chroma_dir)
+    assert reopened.get()["ids"] == []
