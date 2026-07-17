@@ -22,6 +22,7 @@ class Settings:
     chunk_overlap: int = int(os.getenv("CHUNK_OVERLAP", "120"))
     top_k: int = int(os.getenv("TOP_K", "5"))
     fetch_k: int = int(os.getenv("FETCH_K", "20"))
+    upload_dir: Path = Path(os.getenv("UPLOAD_DIR", PROJECT_ROOT / "uploads"))
 
 
 settings = Settings()
