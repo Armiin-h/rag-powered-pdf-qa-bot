@@ -42,6 +42,7 @@ chroma_db/
 # Uploaded documents (keep sample PDFs out of repo)
 uploads/
 data/pdfs/
+results/
 
 # OS
 .DS_Store
