@@ -1,0 +1,27 @@
+[
+  {
+    "question": "What is self-attention?",
+    "expected_keywords": ["attention", "sequence"],
+    "expected_pages": [2, 6]
+  },
+  {
+    "question": "How many encoder and decoder layers does the Transformer use?",
+    "expected_keywords": ["6", "layer"],
+    "expected_pages": [3]
+  },
+  {
+    "question": "What positional encoding approach does the model use?",
+    "expected_keywords": ["sin", "cos", "positional"],
+    "expected_pages": [5, 6]
+  },
+  {
+    "question": "What optimizer was used during training?",
+    "expected_keywords": ["adam"],
+    "expected_pages": [7, 8]
+  },
+  {
+    "question": "What is the dimension of the model (d_model)?",
+    "expected_keywords": ["512"],
+    "expected_pages": [6]
+  }
+]
