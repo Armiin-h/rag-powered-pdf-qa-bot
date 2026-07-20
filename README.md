@@ -11,6 +11,22 @@ A retrieval-augmented generation (RAG) application that lets you upload large PD
 - Semantic search over document chunks
 - LLM-powered answers grounded in retrieved context
 - Simple chat interface for document Q&A
+- Labeled eval set with retrieval and answer quality metrics
+
+## Architecture
+
+```mermaid
+flowchart LR
+    PDF[PDF Upload] --> Loader[PyPDF Loader]
+    Loader --> Splitter[Text Splitter]
+    Splitter --> Embed[Ollama Embeddings]
+    Embed --> Chroma[(ChromaDB)]
+    UserQ[User Question] --> Retriever[Similarity Retriever]
+    Chroma --> Retriever
+    Retriever --> Prompt[Grounded Prompt]
+    Prompt --> LLM[Ollama LLM]
+    LLM --> Answer[Answer + Sources]
+```
 
 ## Tech Stack
 
@@ -96,6 +112,24 @@ streamlit run app.py
 
 Upload a PDF in the sidebar, click **Index document**, then ask questions in the chat. Retrieved source chunks appear in an expander under each answer.
 
+### Evaluation (Day 5)
+
+Run the labeled eval set against an indexed document (requires Ollama and an indexed PDF):
+
+```bash
+python scripts/run_eval.py
+```
+
+Save a JSON report:
+
+```bash
+python scripts/run_eval.py --output results/eval_report.json
+```
+
+Metrics reported per question:
+- **Keyword recall** — fraction of expected terms found in the answer
+- **Page hit rate** — whether retrieved chunks include expected source pages
+
 Run unit tests (no Ollama required):
 
 ```bash
@@ -106,12 +140,19 @@ pytest
 
 ```
 app.py                   # Streamlit chat UI
+data/
+  eval/
+    attention_is_all_you_need.json  # Labeled eval questions
 .streamlit/
   config.toml            # Theme and server defaults
 src/
   config.py              # Environment-based settings
   embeddings/
     ollama_embeddings.py # Ollama embedding model factory
+  evaluation/
+    dataset.py           # Eval case loader
+    metrics.py           # Keyword recall and page-hit scoring
+    runner.py            # Batch eval over the RAG pipeline
   ingestion/
     pdf_loader.py        # PyPDF text extraction
     text_splitter.py     # Recursive character splitting
@@ -129,12 +170,15 @@ src/
 scripts/
   ingest_pdf.py          # CLI for ingestion, indexing, and search
   ask_pdf.py             # CLI for document Q&A
+  run_eval.py            # CLI for RAG evaluation
 tests/
   test_chroma_store.py
   test_indexing_pipeline.py
   test_prompts.py
   test_rag_chain.py
   test_ui_helpers.py
+  test_eval_metrics.py
+  test_eval_runner.py
 ```
 
 ## Project Status
@@ -145,6 +189,7 @@ tests/
 | 2 | Embeddings + ChromaDB | Done |
 | 3 | Retrieval chain + prompt | Done |
 | 4 | Streamlit UI | Done |
+| 5 | Evaluation + architecture docs | Done |
 
 ## License
 
