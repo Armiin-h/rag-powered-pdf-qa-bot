@@ -1,5 +1,7 @@
 # RAG-powered PDF Q&A bot
 
+[![CI](https://github.com/Armiin-h/rag-powered-pdf-qa-bot/actions/workflows/ci.yml/badge.svg)](https://github.com/Armiin-h/rag-powered-pdf-qa-bot/actions/workflows/ci.yml)
+
 A retrieval-augmented generation (RAG) application that lets you upload large PDF documents and ask questions answered strictly from the document's content.
 
 **Repository:** [github.com/Armiin-h/rag-powered-pdf-qa-bot](https://github.com/Armiin-h/rag-powered-pdf-qa-bot)
@@ -37,6 +39,8 @@ flowchart LR
 | Embeddings & LLM | Ollama (local) |
 | Vector store | ChromaDB |
 | UI | Streamlit |
+| Deployment | Docker Compose |
+| CI | GitHub Actions |
 
 ## Prerequisites
 
@@ -59,6 +63,34 @@ python -m venv .venv
 pip install -r requirements.txt
 copy .env.example .env        # adjust settings if needed
 ```
+
+## Docker (recommended)
+
+Run the full stack (Streamlit app + Ollama) with Docker Compose:
+
+```bash
+docker compose up --build -d
+```
+
+Pull models into the Ollama container (first time only):
+
+```bash
+# Linux / macOS / Git Bash
+bash scripts/docker_pull_models.sh
+
+# Windows PowerShell
+.\scripts\docker_pull_models.ps1
+```
+
+Open the app at [http://localhost:8501](http://localhost:8501).
+
+Stop the stack:
+
+```bash
+docker compose down
+```
+
+Persistent volumes keep the vector index, uploads, and downloaded models between restarts.
 
 ## Usage
 
@@ -140,6 +172,9 @@ pytest
 
 ```
 app.py                   # Streamlit chat UI
+Dockerfile               # App container image
+docker-compose.yml       # App + Ollama services
+.github/workflows/ci.yml # Pytest + Docker build checks
 data/
   eval/
     attention_is_all_you_need.json  # Labeled eval questions
@@ -171,6 +206,8 @@ scripts/
   ingest_pdf.py          # CLI for ingestion, indexing, and search
   ask_pdf.py             # CLI for document Q&A
   run_eval.py            # CLI for RAG evaluation
+  docker_pull_models.sh  # Pull Ollama models in compose stack
+  docker_pull_models.ps1
 tests/
   test_chroma_store.py
   test_indexing_pipeline.py
@@ -190,6 +227,14 @@ tests/
 | 3 | Retrieval chain + prompt | Done |
 | 4 | Streamlit UI | Done |
 | 5 | Evaluation + architecture docs | Done |
+| 6 | Docker + CI | Done |
+
+## CI
+
+On every push and pull request to `main`, GitHub Actions runs:
+
+- `pytest` on Python 3.12
+- `docker build` to verify the container image
 
 ## License
 
